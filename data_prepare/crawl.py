@@ -8,7 +8,7 @@ import requests
 from lxml import etree
 import csv
 url="http://huanglab.phys.hust.edu.cn/pepbdb/browse.php"
-pep_ids=[]
+pep_ids=[]b
 for i in range(1,266):
     surl=url+"?pagenum="+str(i)
     html=requests.get(surl).text

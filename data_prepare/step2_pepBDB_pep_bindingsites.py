@@ -1,3 +1,6 @@
+import pandas as pd
+import numpy as np
+
 # -*- coding: utf-8 -*-
 
 # Step 1:  According to the "PDB ID-Peptide Chain-Protein Chain" obtained in "step1_pdb_process.py" , retrieve the interacting information with following fields:
@@ -14,8 +17,8 @@
 
 # Step 3: Loading and mapping labels of binding residues for peptide sequences
 # load peptide-protein pairs & pepBDB files (target : PDB fasta, query : pepBDB)
-df_train = pd.read_csv('pdb_pairs', header=0, sep='#') # The output of "step1_pdb_process.py"
-df_zy_pep = pd.read_csv('./pdb/peptide-mapping.txt',header=None,sep='\t')
+df_train = pd.read_csv(r'C:\Users\kwcoo\Documents\GitHub\CAMP\train_PDB_data_pos', header=0, sep='#')
+df_zy_pep = pd.read_csv('./peptide-mapping.txt',header=None,sep='\t')
 df_zy_pep.columns= ['bdb_id','bdb_pep_seq','pep_binding_vec']
 df_zy_pep['pdb_id'] = df_zy_pep.bdb_id.apply(lambda x: x.split('_')[0])
 df_zy_pep['pep_chain'] = df_zy_pep.bdb_id.apply(lambda x: x.split('_')[1].lower())
@@ -37,7 +40,7 @@ def extract_inter_idx(pep_seq,binding_vec):
         return binding_str
     else:
         return '-99999'
-    
+
 df_v1['binding_idx'] = df_v1.apply(lambda x: extract_inter_idx(x.pep_seq,x.pep_binding_vec),axis=1)
 df_part_pair = df_v1[['pep_seq','prot_seq','binding_idx']]
 df_pos_bs = pd.merge(df_v1,df_part_pair,how='left',left_on=['pep_seq','prot_seq'],right_on=['pep_seq','prot_seq'])
